@@ -1,0 +1,11 @@
+pandas
+numpy
+scikit-learn
+rapidfuzz
+matplotlib
+jupyter
+
+# Section 10 only (LLM adjudication) - optional. The notebook skips that
+# section cleanly when ANTHROPIC_API_KEY is not set.
+anthropic
+python-dotenv
