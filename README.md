@@ -194,6 +194,7 @@ and skips — the notebook still runs end to end.
 
 ---
 
+
 ## Where this fits: the bigger system (future work)
 
 The matching engine in this repo is **one component** of a larger design for an automated
@@ -232,43 +233,6 @@ flowchart TD
 
 **Legend —** 🟪 AI agent (LLM) · 🟩 the ML model in this repo · 🟫 human checkpoint
 
-### Why it's split this way
-
-The interesting decision is **not** making the whole thing an AI agent. Each layer does what it is
-genuinely best at:
-
-| Layer | Job | Why not something else |
-|---|---|---|
-| **AI agent** | Understands the goal, plans the steps, picks tools | Good at open-ended reasoning; too slow, costly, and non-reproducible for bulk work |
-| **ML model** *(built)* | Matches records at volume | 156K pairs in seconds, same answer every run, fully auditable |
-| **LLM adjudication** *(prototyped)* | Breaks ties on genuinely ambiguous pairs | Reads meaning, not just spelling — but only worth its cost on the ~2% that are hard |
-| **Human review** | Signs off on money and low-confidence matches | A wrong match sends a real invoice to the wrong customer |
-
-Three principles drive it:
-
-1. **Keep matching deterministic.** This output creates invoices. You cannot re-score every pair
-   with an LLM on each sync and expect stable results, acceptable latency, or a sane bill.
-2. **Spend intelligence where it pays.** Measured in this repo: 2.3% of pairs carry 52.5% of the
-   model's errors. That band is worth an expensive judge; the other 97.7% is not.
-3. **Never let AI silently commit a money action.** Confidence scores exist so uncertain matches
-   can be routed to a person instead of quietly becoming an invoice.
-
-### Build order from here
-
-1. ~~Matching engine~~ ✅ **this repo**
-2. LLM column mapping — already met this problem here: the benchmark's Amazon `title` vs Google
-   `name` is exactly the mismatch a real customer's spreadsheet presents
-3. Connectors (Google Sheets / Excel, a CRM, QuickBooks) over official OAuth
-4. Human-review queue, driven by the confidence scores this pipeline already produces
-5. The agent layer that orchestrates the above
-6. Scheduled syncing
-
-### What is honestly *not* solved yet
-
-This pipeline handles **value-level** mess — typos, name variants, reformatted phones, missing
-fields. It does not yet handle **structural** mess: merged cells, junk header rows, dates stored as
-text, or columns it has never seen. That gap is real and is the first thing a production version
-would have to close.
 
 ## Credits
 
