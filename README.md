@@ -205,30 +205,35 @@ reasoning behind it matters more than the code that would implement it.
 flowchart TD
     A["<b>You provide the inputs</b><br/>messy files + plain-English goal"]
     B["<b>AI agent (the LLM brain)</b><br/>reads the situation, plans, picks tools"]
-    C["<b>Map the columns</b><br/>LLM maps fields"]
-    D["<b>Match records</b><br/>THIS REPO — the ML model"]
-    E["<b>Judge hard cases</b><br/>LLM breaks ties"]
+
+    subgraph TOOLS["Tools the agent can call"]
+        direction LR
+        C["<b>Map the columns</b><br/>LLM maps fields"]
+        D["<b>Match records</b><br/>THIS REPO — the ML model"]
+        E["<b>Judge hard cases</b><br/>LLM breaks ties"]
+    end
+
     F["<b>Human review</b><br/>approves money and unsure matches"]
     G["<b>Synced data + invoices</b><br/>clean, one record per customer"]
 
     A --> B
-    B --> C
-    B --> D
-    B --> E
-    D --> F
+    B --> TOOLS
+    TOOLS --> F
     F --> G
 
-    classDef input  fill:#3F3F3F,stroke:#6E6E6E,color:#FFFFFF
-    classDef llm    fill:#4B3F9E,stroke:#7B6FD0,color:#FFFFFF
-    classDef ml     fill:#0B5D4A,stroke:#17B98D,color:#FFFFFF
-    classDef human  fill:#8B4A0B,stroke:#D08A2A,color:#FFFFFF
-    classDef output fill:#2D5A16,stroke:#5AA82C,color:#FFFFFF
+    classDef input  fill:#EFEFEA,stroke:#B8B8B0,color:#2B2B2B
+    classDef llm    fill:#E8E4FB,stroke:#7B6FD0,color:#2A1E6B
+    classDef ml     fill:#DFF3EA,stroke:#17805F,color:#0B4A38
+    classDef human  fill:#FBE8CE,stroke:#D08A2A,color:#7A4708
+    classDef output fill:#E4F2D8,stroke:#5AA82C,color:#2A5410
 
     class A input
     class B,C,E llm
     class D ml
     class F human
     class G output
+
+    style TOOLS fill:transparent,stroke:#AAAAAA,stroke-dasharray:5 5,color:#2B2B2B
 ```
 
 **Legend —** 🟪 AI agent (LLM) · 🟩 the ML model in this repo · 🟫 human checkpoint
